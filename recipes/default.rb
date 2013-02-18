@@ -54,6 +54,7 @@ remote_file "#{node[:cassandra][:download_path]}/apache-cassandra-#{node[:cassan
   source "#{node[:cassandra][:download_url_base]}/#{node[:cassandra][:version]}/apache-cassandra-#{node[:cassandra][:version]}-bin.tar.gz"
   mode "0644"
   checksum node[:cassandra][:checksum]
+  action :create_if_missing
 end
 
 directory "#{node[:cassandra][:data_file_directories]}" do
@@ -173,7 +174,7 @@ ruby_block "Restore from snapshots" do
     if Dir.entries(node[:cassandra][:data_file_directories]).size == 2
       # Check if snapshots exists
       cassandra_backup_dir = "#{node[:cassandra][:backup_dir]}/cassandra"
-      if Dir.exists?(cassandra_backup_dir)
+      if File.directory?(cassandra_backup_dir)
         # Find the directory for latest backup date
         latest_date_str = ""
         latest_date_obj = Date.parse("1970-01-01")
@@ -222,6 +223,9 @@ end
 
 ruby_block "chmod snapshot directory" do
   block do
+    if !File.directory?(node[:cassandra][:backup_dir])
+      FileUtils.mkdir_p node[:cassandra][:backup_dir]
+    end 
     FileUtils.chown_R "cassandra", "cassandra", node[:cassandra][:backup_dir]
   end
 end

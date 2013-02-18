@@ -4,11 +4,13 @@ default[:setup][:cluster_size] = 8
 default[:setup][:current_role] = "cassandra"
 
 
-default[:cassandra][:version] = "1.2.0"
-default[:cassandra][:checksum] = "47bd459fd103a539ef148089f4c8050eeaa950b0b19a798f69905a942fc59510"
+default[:cassandra][:version] = "1.2.1"
+default[:cassandra][:checksum] = "62b947c2c88d7c28afd044b09be9084e5c3d4949"
 default[:cassandra][:jna_version] = "3.5.1"
 
+
 default[:cassandra][:user] = "cassandra"
+default[:cassandra][:group] = "cassandra"
 
 default[:cassandra][:logs_directory] = "/var/lib/cassandra/logs"
 
@@ -18,6 +20,11 @@ default[:cassandra][:initial_token] = false
 default[:cassandra][:rpc_address] = false
 default[:cassandra][:confPath] = "/etc/cassandra/"
 default[:cassandra][:download_path] = "/var/tmp"
+default[:cassandra][:log_path] = "/var/log/cassandra"
+default[:cassandra][:install_path] = "/var/lib/cassandra"
+default[:cassandra][:download_url_base] = "https://www.apache.org/dist/cassandra"
+default[:cassandra][:backup_dir] = "/var/backup"
+
 
 default[:internal][:prime] = true
 
