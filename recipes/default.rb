@@ -171,6 +171,14 @@ template "#{node[:cassandra][:install_path]}/cassandra/conf/log4j-server.propert
 #  notifies :restart , resources(:service => "cassandra")
 end
 
+template "#{node[:cassandra][:install_path]}/cassandra/conf/cassandra-topology.properties" do
+  source "cassandra-topology.properties.erb"
+  owner node[:cassandra][:user]
+  group node[:cassandra][:group]
+  mode "0644"
+#  notifies :restart , resources(:service => "cassandra")
+end
+
 template "#{node[:cassandra][:install_path]}/cassandra/bin/snapshot.sh" do
    owner "cassandra"
    group "cassandra"
