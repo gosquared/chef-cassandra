@@ -98,22 +98,35 @@ directory "/home/#{node[:cassandra][:user]}" do
 end
 
 # Install Cassandra
-bash "Unpack Cassandra" do
-  code <<-EOH
-    if [ ! -d #{node[:cassandra][:install_path]}/apache-cassandra-#{node[:cassandra][:version]} ]
-    then
-      cd #{node[:cassandra][:install_path]}
-      tar xzf #{node[:cassandra][:download_path]}/apache-cassandra-#{node[:cassandra][:version]}-bin.tar.gz
-      ln -s #{node[:cassandra][:install_path]}/apache-cassandra-#{node[:cassandra][:version]} cassandra
-    fi
-  EOH
+# bash "Unpack Cassandra" do
+#   code <<-EOH
+#     if [ ! -d #{node[:cassandra][:install_path]}/apache-cassandra-#{node[:cassandra][:version]} ]
+#     then
+#       cd #{node[:cassandra][:install_path]}
+#       tar xzf #{node[:cassandra][:download_path]}/apache-cassandra-#{node[:cassandra][:version]}-bin.tar.gz
+#       ln -s #{node[:cassandra][:install_path]}/apache-cassandra-#{node[:cassandra][:version]} cassandra
+#     fi
+#   EOH
+# end
+
+bash "Extract Cassandra" do
+  cwd "#{node[:cassandra][:install_path]}"
+  code %{
+    tar -xzf #{node[:cassandra][:download_path]}/apache-cassandra-#{node[:cassandra][:version]}-bin.tar.gz
+  }
+  not_if "[ -d apache-cassandra-#{node[:cassandra][:version]} ]"
+end
+
+link "#{node[:cassandra][:install_path]}/cassandra" do
+  to "#{node[:cassandra][:install_path]}/apache-cassandra-#{node[:cassandra][:version]}"
+  # only_if "[ ! -L #{node[:cassandra][:install_path]}/cassandra"
 end
 
 # Download jna.jar
 remote_file "#{node[:cassandra][:install_path]}/cassandra/lib/jna.jar" do
   source "http://repo1.maven.org/maven2/net/java/dev/jna/jna/#{node[:cassandra][:jna_version]}/jna-#{node[:cassandra][:jna_version]}.jar"
   mode "0644"
-  not_if { File.exists?("#{node[:cassandra][:install_path]}/cassandra/lib/jna.jar") }
+  not_if { File.exists?("#{node[:cassandra][:install_path]}/lib/jna.jar") }
 end
 
 # Install startup script from template
