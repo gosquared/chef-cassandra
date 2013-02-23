@@ -24,6 +24,7 @@ default[:cassandra][:log_path] = "/var/log/cassandra"
 default[:cassandra][:install_path] = "/var/lib/cassandra"
 default[:cassandra][:download_url_base] = "https://www.apache.org/dist/cassandra"
 default[:cassandra][:backup_dir] = "/var/backup"
+default[:cassandra][:log_file] = "#{ node[:cassandra][:log_path] }/cassandra.log"
 
 
 default[:internal][:prime] = true
