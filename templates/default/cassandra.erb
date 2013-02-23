@@ -13,12 +13,13 @@
 ### END INIT INFO
 
 
-
-export JAVA_HOME=<%= node[:java][:home] %>
-export PATH=$JAVA_HOME/bin:$PATH
+export CASSANDRA_BIN_DIR=<%= node[:cassandra][:install_path] %>/cassandra/bin
+export JAVA_HOME=<%= node[:java][:java_home] %>
+export PATH=$JAVA_HOME/bin:$CASSANDRA_BIN_DIR:$PATH
 export CASSANDRA_HOME=<%= node[:cassandra][:home] %>
-export CASSANDRA_BIN_DIR=${CASSANDRA_HOME}/bin
 export CASSANDRA_INCLUDE=${CASSANDRA_BIN_DIR}/cassandra.in.sh
+export CASSANDRA_CONF=<%= node[:cassandra][:install_path] %>/cassandra/conf
+export CLASSPATH=<%= node[:cassandra][:install_path] %>/cassandra/lib
 
 startCassandra() {
 	su cassandra -c $CASSANDRA_BIN_DIR/cassandra
